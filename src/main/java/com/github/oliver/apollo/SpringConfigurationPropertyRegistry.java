@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.spring.property;
+package com.github.oliver.apollo;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
@@ -34,8 +34,7 @@ public class SpringConfigurationPropertyRegistry {
 
   public void register(BeanFactory beanFactory, String prefix,
       String beanName) {
-    registry.computeIfAbsent(beanFactory,
-        k -> Multimaps.synchronizedSetMultimap(HashMultimap.create())).put(prefix, beanName);
+    registry.computeIfAbsent(beanFactory, k -> Multimaps.synchronizedSetMultimap(HashMultimap.create())).put(prefix, beanName);
   }
 
   public Collection<String> get(BeanFactory beanFactory, String key) {

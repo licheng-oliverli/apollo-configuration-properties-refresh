@@ -1,2 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.github.selfancy.apollo.DynamicPropertiesBeanAutoConfiguration
+com.github.oliver.apollo.AutoRefreshConfigurationPropertiesListener,\
+com.github.oliver.apollo.SpringConfigurationPropertiesProcessor,\
+com.github.oliver.apollo.SpringConfigurationPropertyRegistry

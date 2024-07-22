@@ -14,12 +14,9 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.spring.annotation;
+package com.github.oliver.apollo;
 
-import com.ctrip.framework.apollo.build.ApolloInjector;
-import com.ctrip.framework.apollo.spring.property.SpringConfigurationPropertyRegistry;
 import com.ctrip.framework.apollo.spring.util.SpringInjector;
-import com.ctrip.framework.apollo.util.ConfigUtil;
 import java.lang.annotation.Annotation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +24,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -34,18 +32,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @author licheng
  */
+@ConditionalOnProperty("apollo.AutoRefreshConfigurationProperties")
 public class SpringConfigurationPropertiesProcessor implements BeanPostProcessor, BeanFactoryAware {
 
   private static final Logger logger = LoggerFactory.getLogger(SpringConfigurationPropertiesProcessor.class);
   private static final String REFRESH_SCOPE_NAME = "org.springframework.cloud.context.config.annotation.RefreshScope";
 
-  private final ConfigUtil configUtil;
-  private final SpringConfigurationPropertyRegistry springConfigurationPropertyRegistry;
   private BeanFactory beanFactory;
 
   public SpringConfigurationPropertiesProcessor() {
-    springConfigurationPropertyRegistry = SpringInjector.getInstance(SpringConfigurationPropertyRegistry.class);
-    configUtil = ApolloInjector.getInstance(ConfigUtil.class);
+//    springConfigurationPropertyRegistry = SpringInjector.getInstance(SpringConfigurationPropertyRegistry.class);
   }
 
   @Override
@@ -55,10 +51,10 @@ public class SpringConfigurationPropertiesProcessor implements BeanPostProcessor
         ConfigurationProperties.class);
     // match beans with annotated `@ConfigurationProperties` and `@ApolloConfigurationPropertiesRefresh`,
     // or `@ConfigurationProperties` and `@RefreshScope`
-    if (configUtil.isAutoRefreshConfigurationPropertiesEnabled() && configurationPropertiesAnnotation != null && annotatedRefresh(clazz)) {
+    if (configurationPropertiesAnnotation != null && annotatedRefresh(clazz)) {
       String prefix = configurationPropertiesAnnotation.prefix();
       // cache prefix and bean name
-      springConfigurationPropertyRegistry.register(this.beanFactory, prefix, beanName);
+      beanFactory.getBean(SpringConfigurationPropertyRegistry.class).register(this.beanFactory, prefix, beanName);
       logger.debug("Monitoring ConfigurationProperties bean {}", beanName);
     }
     return bean;

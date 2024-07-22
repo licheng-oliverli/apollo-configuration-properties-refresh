@@ -14,12 +14,10 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.spring.property;
+package com.github.oliver.apollo;
 
-import com.ctrip.framework.apollo.build.ApolloInjector;
 import com.ctrip.framework.apollo.spring.events.ApolloConfigChangeEvent;
 import com.ctrip.framework.apollo.spring.util.SpringInjector;
-import com.ctrip.framework.apollo.util.ConfigUtil;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -29,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.util.CollectionUtils;
@@ -38,6 +37,7 @@ import org.springframework.util.CollectionUtils;
  *
  * @author licheng
  */
+@ConditionalOnProperty("apollo.AutoRefreshConfigurationProperties")
 public class AutoRefreshConfigurationPropertiesListener implements
     ApplicationListener<ApolloConfigChangeEvent>,
     BeanFactoryAware {
@@ -47,20 +47,15 @@ public class AutoRefreshConfigurationPropertiesListener implements
   private static final String TEMP_PREFIX = "apollo.refresh.tmp.";
 
   private BeanFactory beanFactory;
-  private final ConfigUtil configUtil;
-  private final SpringConfigurationPropertyRegistry springConfigurationPropertyRegistry;
 
   public AutoRefreshConfigurationPropertiesListener() {
-    this.springConfigurationPropertyRegistry = SpringInjector.getInstance(
-        SpringConfigurationPropertyRegistry.class);
-    configUtil = ApolloInjector.getInstance(ConfigUtil.class);
+//    springConfigurationPropertyRegistry = SpringInjector.getInstance(SpringConfigurationPropertyRegistry.class);
   }
 
   @Override
   public void onApplicationEvent(ApolloConfigChangeEvent event) {
     Set<String> keys = event.getConfigChangeEvent().changedKeys();
-    if (!configUtil.isAutoRefreshConfigurationPropertiesEnabled() || CollectionUtils.isEmpty(
-        keys)) {
+    if (CollectionUtils.isEmpty(keys)) {
       return;
     }
     // 1. check whether the changed key is relevant
@@ -74,7 +69,7 @@ public class AutoRefreshConfigurationPropertiesListener implements
   private Set<String> collectTargetBeanNames(Set<String> keys) {
     Set<String> targetBeanNames = new HashSet<>();
     for (String key : keys) {
-      Collection<String> targetCollection = springConfigurationPropertyRegistry.get(beanFactory,
+      Collection<String> targetCollection = beanFactory.getBean(SpringConfigurationPropertyRegistry.class).get(beanFactory,
           key);
       if (targetCollection != null) {
         // ensure each bean refreshed once

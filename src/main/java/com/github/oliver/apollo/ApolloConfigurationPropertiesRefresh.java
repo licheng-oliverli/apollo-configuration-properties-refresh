@@ -14,9 +14,13 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.spring.annotation;
+package com.github.oliver.apollo;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Use this annotation and <code>@ConfiguringProperties<code> to refresh ConfigurationProperties.

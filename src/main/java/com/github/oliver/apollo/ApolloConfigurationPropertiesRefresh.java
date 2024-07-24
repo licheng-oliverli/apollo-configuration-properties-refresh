@@ -23,7 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use this annotation and <code>@ConfiguringProperties<code> to refresh ConfigurationProperties.
+ * Use this annotation and <code>@ConfiguringProperties</code> to refresh ConfigurationProperties.
  *
  * <p>Usage example:</p>
  * <pre class="code">

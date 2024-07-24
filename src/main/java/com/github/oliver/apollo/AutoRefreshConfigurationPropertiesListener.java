@@ -69,12 +69,9 @@ public class AutoRefreshConfigurationPropertiesListener implements
   private Set<String> collectTargetBeanNames(Set<String> keys) {
     Set<String> targetBeanNames = new HashSet<>();
     for (String key : keys) {
-      Collection<String> targetCollection = beanFactory.getBean(SpringConfigurationPropertyRegistry.class).get(beanFactory,
-          key);
-      if (targetCollection != null) {
-        // ensure each bean refreshed once
-        targetBeanNames.addAll(targetCollection);
-      }
+      Collection<String> targetCollection = beanFactory.getBean(SpringConfigurationPropertyRegistry.class).get(beanFactory, key);
+      // ensure each bean refreshed once
+      targetBeanNames.addAll(targetCollection);
     }
     return targetBeanNames;
   }

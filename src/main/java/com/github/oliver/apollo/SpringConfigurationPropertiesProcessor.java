@@ -18,6 +18,7 @@ package com.github.oliver.apollo;
 
 import com.ctrip.framework.apollo.spring.util.SpringInjector;
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -35,7 +36,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConditionalOnProperty("apollo.AutoRefreshConfigurationProperties")
 public class SpringConfigurationPropertiesProcessor implements BeanPostProcessor, BeanFactoryAware {
 
-  private static final Logger logger = LoggerFactory.getLogger(SpringConfigurationPropertiesProcessor.class);
+  private static final Logger logger = LoggerFactory.getLogger(
+      SpringConfigurationPropertiesProcessor.class);
   private static final String REFRESH_SCOPE_NAME = "org.springframework.cloud.context.config.annotation.RefreshScope";
 
   private BeanFactory beanFactory;
@@ -54,7 +56,8 @@ public class SpringConfigurationPropertiesProcessor implements BeanPostProcessor
     if (configurationPropertiesAnnotation != null && annotatedRefresh(clazz)) {
       String prefix = configurationPropertiesAnnotation.prefix();
       // cache prefix and bean name
-      beanFactory.getBean(SpringConfigurationPropertyRegistry.class).register(this.beanFactory, prefix, beanName);
+      beanFactory.getBean(SpringConfigurationPropertyRegistry.class)
+          .register(this.beanFactory, prefix, beanName);
       logger.debug("Monitoring ConfigurationProperties bean {}", beanName);
     }
     return bean;
@@ -68,12 +71,7 @@ public class SpringConfigurationPropertiesProcessor implements BeanPostProcessor
   }
 
   private boolean isRefreshScope(Annotation[] annotations) {
-    for (Annotation annotation : annotations) {
-      if (annotation.annotationType().getName().equals(REFRESH_SCOPE_NAME)) {
-        return true;
-      }
-    }
-    return false;
+    return Arrays.stream(annotations).anyMatch(annotation -> annotation.annotationType().getName().equals(REFRESH_SCOPE_NAME));
   }
 
   @Override

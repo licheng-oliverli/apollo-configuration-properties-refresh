@@ -21,6 +21,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import org.springframework.beans.factory.BeanFactory;
@@ -40,7 +41,7 @@ public class SpringConfigurationPropertyRegistry {
   public Collection<String> get(BeanFactory beanFactory, String key) {
     Multimap<String, String> beanNameMap = registry.get(beanFactory);
     if (beanNameMap == null) {
-      return null;
+      return Collections.emptyList();
     }
     // get all prefix matches beans
     Collection<String> targetCollection = new HashSet<>();

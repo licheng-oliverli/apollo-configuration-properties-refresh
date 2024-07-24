@@ -16,7 +16,6 @@
  */
 package com.github.oliver.apollo;
 
-import com.ctrip.framework.apollo.spring.util.SpringInjector;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import org.slf4j.Logger;

@@ -17,7 +17,6 @@
 package com.github.oliver.apollo;
 
 import com.ctrip.framework.apollo.spring.events.ApolloConfigChangeEvent;
-import com.ctrip.framework.apollo.spring.util.SpringInjector;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashSet;
